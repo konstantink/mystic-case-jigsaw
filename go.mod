@@ -1,3 +1,3 @@
-module github.com/GoogleCloudPlatform/golang-samples/run/helloworld
+module github.com/konstantink/mystic-case-jigsaw
 
-go 1.13
+go 1.17

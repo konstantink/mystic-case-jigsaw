@@ -10,29 +10,29 @@ import (
 	"net/http"
 	"net/smtp"
 	"os"
+
+	"github.com/jordan-wright/email"
 )
 
 const emailTemplate = `
-Hello there,
+<p>Hello there,</p>
 
-Somebody has left a feedback for the jigsaw. Here are the answers:
-- Quest:        %d
-- Quality:      %d
-- Artwork:      %d
-- Overall:      %d
+<p>Somebody has left a feedback for the jigsaw. Here are the answers:
+<ul>
+        <li>Quest: %d</li>
+        <li>Quality: %d</li>
+        <li>Artwork: %d</li>
+        <li>Overall: %d</li>
+        <li>The reason to buy: %q</li>
+        <li>Anything to add: %q</li>
+</ul></p>
 
-- The reason to buy:
-%q
+<p>That's all for now.</p>
 
-- Anything to add:
-%q
+<p>Have a nice day!</p>
 
-That's all for now.
-
-Have a nice day!
-
-Kind regards,
-Your jigsaw.mystic-case.co.uk
+<p>Kind regards,<br/>
+Your jigsaw.mystic-case.co.uk</p>
 `
 
 func main() {
@@ -92,6 +92,7 @@ func townFestival(w http.ResponseWriter, r *http.Request) {
 		"./templates/views/artwork_form.html",
 		"./templates/views/quest_form.html",
 		"./templates/views/overall_form.html",
+		"./templates/views/footer.html",
 	}
 
 	tpl, err := template.ParseFiles(files...)
@@ -110,11 +111,11 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 	check := func(err error) bool {
 		if err != nil {
 			var resp = struct {
-				Status string
-				Error  string
+				Success bool   `json:"success"`
+				Message string `json:"message"`
 			}{
-				Status: "error",
-				Error:  err.Error(),
+				Success: false,
+				Message: err.Error(),
 			}
 			respBytes, _ := json.Marshal(resp)
 			fmt.Fprintf(w, string(respBytes))
@@ -143,15 +144,22 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
-			payload.Overall, payload.ReasonToBuy, payload.Optional))
+		// message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
+		// 	payload.Overall, payload.ReasonToBuy, payload.Optional))
 
-		err = sendEmail(message)
-		if !check(err) {
-			log.Printf("Failed to send email: %s", err.Error())
-			return
-		}
+		// err = sendEmail(message)
+		// if !check(err) {
+		// 	log.Printf("Failed to send email: %s", err.Error())
+		// 	return
+		// }
 		log.Print("Email sent successfully")
+		resp := struct {
+			Success bool `json:"success"`
+		}{
+			Success: true,
+		}
+		respJson, _ := json.Marshal(resp)
+		fmt.Fprint(w, string(respJson))
 	} else {
 		fmt.Fprintf(w, "Method %q is not supported", r.Method)
 	}
@@ -163,12 +171,21 @@ func sendEmail(message []byte) error {
 	username := os.Getenv("MYSTIC_CASE_USERNAME")
 	password := os.Getenv("MYSTIC_CASE_PASSWORD")
 	to := os.Getenv("MYSTIC_CASE_TO")
+	from := os.Getenv("MYSTIC_CASE_FROM")
+
+	e := email.Email{
+		From:    from,
+		To:      []string{to},
+		Subject: "User feedback on the jigsaw",
+		HTML:    message,
+	}
 
 	log.Print("Authorising on SMTP server...")
 	auth := smtp.PlainAuth("", username, password, host)
 
 	log.Print("Sending email...")
-	return smtp.SendMail(fmt.Sprintf("%s:%s", host, port), auth, "jigsaw.mystic-case.co.uk", []string{to}, message)
+	return e.Send(fmt.Sprintf("%s:%s", host, port), auth)
+	//return smtp.SendMail(fmt.Sprintf("%s:%s", host, port), auth, from, []string{to}, message)
 }
 
 func fileHandler(path string) http.Handler {

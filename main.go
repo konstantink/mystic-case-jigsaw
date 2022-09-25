@@ -104,7 +104,25 @@ func townFestival(w http.ResponseWriter, r *http.Request) {
 }
 
 func hintsTownFestival(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello world!")
+	debug("Hints Town Festival")
+	var context = struct {
+		IsMobile bool
+	}{
+		IsMobile: false,
+	}
+
+	var files = []string{
+		"./templates/base.html",
+		"./templates/views/hints.html",
+		"./templates/views/footer.html",
+	}
+
+	tpl, err := template.ParseFiles(files...)
+	if !check(err, w) {
+		return
+	}
+
+	tpl.ExecuteTemplate(w, "base", context)
 }
 
 func feedback(w http.ResponseWriter, r *http.Request) {

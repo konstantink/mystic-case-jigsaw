@@ -1,0 +1,73 @@
+{{ define "main" }}
+    <div class="row wrapper header">
+        <div class="col p-2">
+        <div style="width: 100%;">
+            <p class="h1 mb-4 mt-4 text-center">
+                Congratulations
+            </p>
+            <div class="col-lg-6 mx-auto text-center">
+                <p class="h4 mb-4">
+                    You have successfully completed the quest. 
+                    Phoenix is the new monument of our town as a symbol of its rebirth from the ashes!
+                </p>
+            </div>
+        </div>
+            <img class="task-img mb-4 rounded" src="/images/phoenix.webp" />
+            <div class="col-lg-6 mx-auto text-center">
+                <p class="lead mb-4">
+                    This is our very first exclusively designed and self-produced puzzle. We really hope that you enjoyed time solving it &#128526;
+                </p>
+            </div>
+            <div class="col-lg-6 mx-auto mb-4">
+                <p class="h4 mb-4 text-center">
+                    Please let us know your thoughts about TOWN FESTIVAL jigsaw and quest
+                </p>
+
+                <div id="feedback-form-carousel" class="carousel slide carousel-fade" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <form onsubmit="onSubmit(event)">
+                                {{template "quality_form"}}
+
+                                {{template "artwork_form"}}
+
+                                {{template "quest_form"}}
+
+                                {{template "overall_form"}}
+
+                                <div class="mb-4">
+                                    <label for="reason-to-buy" class="form-label">What was your reason to order Town Festival jigsaw?</label>
+                                    <textarea class="form-control" id="reason-to-buy" rows="2"></textarea>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="optional" class="form-label">Anything else you'd like to tell us &#128522;</label>
+                                    <textarea class="form-control" id="optional" rows="2"></textarea>
+                                </div>
+
+                                <div class="mb-4 d-flex justify-content-center">
+                                    <button class="btn btn-primary" onClick="onSubmit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="carousel-item">
+                            Thank you for your feedback!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mx-auto mb-4 text-center">
+                <p class="lead mb-4">
+                    Of course we appreciate sharing your experience on social media (just don't forget to mention our account @mystic_case on Instagram or @mysticcase.fb on Facebook) or giving recommendations on our <a href="https://www.facebook.com/mysticcase.fb" target="_blank">Facebook page</a>
+                </p>
+                <p class="lead mb-4">
+                    Thank you!🤗
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+{{ end }}

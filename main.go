@@ -2,35 +2,175 @@
 package main
 
 import (
-        "fmt"
-        "log"
-        "net/http"
-        "os"
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"io"
+	"log"
+	"net/http"
+	"net/smtp"
+	"os"
 )
 
+const emailTemplate = `
+Hello there,
+
+Somebody has left a feedback for the jigsaw. Here are the answers:
+- Quest:        %d
+- Quality:      %d
+- Artwork:      %d
+- Overall:      %d
+
+- The reason to buy:
+%q
+
+- Anything to add:
+%q
+
+That's all for now.
+
+Have a nice day!
+
+Kind regards,
+Your jigsaw.mystic-case.co.uk
+`
+
 func main() {
-        log.Print("starting server...")
-        http.HandleFunc("/", handler)
+	log.Print("starting server...")
+	http.HandleFunc("^/$", handler)
+	http.HandleFunc("/welcome", townFestival)
+	http.HandleFunc("/hints/town-festival", hintsTownFestival)
+	http.HandleFunc("/feedback", feedback)
+	http.Handle("/static/", http.StripPrefix("/static/", fileHandler("./static")))
+	http.Handle("/images/", http.StripPrefix("/images/", fileHandler("./images")))
 
-        // Determine port for HTTP service.
-        port := os.Getenv("PORT")
-        if port == "" {
-                port = "8080"
-                log.Printf("defaulting to port %s", port)
-        }
+	// Determine port for HTTP service.
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("defaulting to port %s", port)
+	}
 
-        // Start HTTP server.
-        log.Printf("listening on port %s", port)
-        if err := http.ListenAndServe(":"+port, nil); err != nil {
-                log.Fatal(err)
-        }
+	// Start HTTP server.
+	log.Printf("listening on port %s", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func debug(format string, v ...interface{}) {
+	log.Printf(fmt.Sprintf("[DEBUG] %s", format), v...)
+}
+
+func check(err error, w http.ResponseWriter) bool {
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return false
+	}
+	return true
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-        name := os.Getenv("NAME")
-        if name == "" {
-                name = "World!"
-        }
-        fmt.Fprintf(w, "Hello %s!\n", name)
+	name := os.Getenv("NAME")
+	if name == "" {
+		name = "World!"
+	}
+	fmt.Fprintf(w, "Hello %s!\n", name)
 }
 
+func townFestival(w http.ResponseWriter, r *http.Request) {
+	debug("Town Festival")
+	var context = struct {
+		IsMobile bool
+	}{
+		IsMobile: false,
+	}
+	var files = []string{
+		"./templates/base.html",
+		"./templates/views/home.html",
+		"./templates/views/quality_form.html",
+		"./templates/views/artwork_form.html",
+		"./templates/views/quest_form.html",
+		"./templates/views/overall_form.html",
+	}
+
+	tpl, err := template.ParseFiles(files...)
+	if !check(err, w) {
+		return
+	}
+
+	tpl.ExecuteTemplate(w, "base", context)
+}
+
+func hintsTownFestival(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello world!")
+}
+
+func feedback(w http.ResponseWriter, r *http.Request) {
+	check := func(err error) bool {
+		if err != nil {
+			var resp = struct {
+				Status string
+				Error  string
+			}{
+				Status: "error",
+				Error:  err.Error(),
+			}
+			respBytes, _ := json.Marshal(resp)
+			fmt.Fprintf(w, string(respBytes))
+			return false
+		}
+
+		return true
+	}
+
+	if r.Method == http.MethodPost {
+		defer r.Body.Close()
+		var payload struct {
+			Quest       int8
+			Quality     int8
+			Artwork     int8
+			Overall     int8
+			ReasonToBuy string
+			Optional    string
+		}
+		body, err := io.ReadAll(r.Body)
+		if !check(err) {
+			return
+		}
+		err = json.Unmarshal(body, &payload)
+		if !check(err) {
+			return
+		}
+
+		message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
+			payload.Overall, payload.ReasonToBuy, payload.Optional))
+
+		err = sendEmail(message)
+		if !check(err) {
+			log.Printf("Failed to send email: %s", err.Error())
+			return
+		}
+		log.Print("Email sent successfully")
+	} else {
+		fmt.Fprintf(w, "Method %q is not supported", r.Method)
+	}
+}
+
+func sendEmail(message []byte) error {
+	host := os.Getenv("MYSTIC_CASE_SMTP_HOST")
+	port := os.Getenv("MYSTIC_CASE_SMTP_PORT")
+	username := os.Getenv("MYSTIC_CASE_USERNAME")
+	password := os.Getenv("MYSTIC_CASE_PASSWORD")
+	to := os.Getenv("MYSTIC_CASE_TO")
+
+	log.Print("Authorising on SMTP server...")
+	auth := smtp.PlainAuth("", username, password, host)
+
+	log.Print("Sending email...")
+	return smtp.SendMail(fmt.Sprintf("%s:%s", host, port), auth, "jigsaw.mystic-case.co.uk", []string{to}, message)
+}
+
+func fileHandler(path string) http.Handler {
+	return http.FileServer(http.Dir(path))
+}

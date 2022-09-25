@@ -1,0 +1,166 @@
+body {
+    background-color: #3A3185;
+    color:#231E52;
+    font-family: 'Pangram', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+@font-face {
+    font-family: "Pangram";
+    src: url('/static/fonts/Pangram-Regular.woff') format("woff");
+    font-weight: normal;
+}
+  
+@font-face {
+    font-family: 'Pangram';
+    src: url('/static/fonts/Pangram-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+  
+@font-face {
+    font-family: 'Pangram';
+    src: url('/static/fonts/Pangram-Black.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+  
+@font-face {
+    font-family: 'Pangram';
+    src: url('/static/fonts/Pangram-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+#main {
+    /* background-color: #E5E5E5;
+    border-radius: 40px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* form {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 200px 128px 1fr;
+    grid-column-gap: 8px;
+} */
+
+.logo-container {
+    display: flex;
+    filter: brightness(0) invert(1);
+    justify-content: center;
+}
+
+.carousel-control-next {
+    right: -48px;
+}
+
+.carousel-control-prev {
+    left: -48px;
+}
+
+.round-indicator {
+    border-radius: 50%;
+    height: 8px!important;
+    width: 8px!important;
+}
+
+.wrapper {
+    background-color: #E5E5E5;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* padding: 40px; */
+}
+/* @media (min-width: 768px) {
+    .wrapper {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+} */
+
+.wrapper:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.header {
+    align-items: center;
+}
+
+.main-text {
+    text-align: justify;
+    text-indent: 24px;
+    font-size: calc(1.225rem + 1.5vw);
+}
+
+.btn {
+    color: #3A3185;
+    padding: 8px 32px;
+    border-radius: 80px;
+    background-color: #B3D138;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.btn:hover, .btn:focus {
+    background-color: #9FBD24;
+    color: #3A3185;
+}
+
+@media (min-width: 992px) {
+    .main-text {
+        font-size: 1rem;
+    }
+}
+
+.no-text-indent {
+    text-indent: 0;
+}
+
+.container-img {
+    max-width: 500px;
+}
+
+.task-img {
+    width: 100%;
+}
+
+.h1 {
+    font-size: 36px;
+}
+
+.correct, .incorrect {
+    font-size: 12pt;
+}
+
+.correct {
+    color: forestgreen;
+}
+
+.incorrect {
+    color: #ff1100;
+}
+
+.form-table {
+    display: grid;
+    column-gap: 8px;
+    grid-template-columns: repeat(5, minmax(60px, 160px));
+}
+
+.form-label {
+    grid-column: 1 / span 5;
+}
+
+.form-check-label {
+    font-size: 14pt;
+    font-weight: bolder;
+}
+
+.hint {
+    display: block;
+    font-size: 10pt;
+    font-weight: normal;
+}

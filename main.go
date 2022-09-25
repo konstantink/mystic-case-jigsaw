@@ -38,11 +38,14 @@ Your jigsaw.mystic-case.co.uk</p>
 func main() {
 	log.Print("starting server...")
 	http.HandleFunc("^/$", handler)
+	http.HandleFunc("/favicon.ico", fileHandler("./images/favicon.ico"))
+	http.HandleFunc("/sitemap.xml", fileHandler("./sitemap.xml"))
+	http.HandleFunc("/robots.txt", fileHandler("./robots.txt"))
 	http.HandleFunc("/welcome", townFestival)
 	http.HandleFunc("/hints/town-festival", hintsTownFestival)
 	http.HandleFunc("/feedback", feedback)
-	http.Handle("/static/", http.StripPrefix("/static/", fileHandler("./static")))
-	http.Handle("/images/", http.StripPrefix("/images/", fileHandler("./images")))
+	http.Handle("/static/", http.StripPrefix("/static/", folderHandler("./static")))
+	http.Handle("/images/", http.StripPrefix("/images/", folderHandler("./images")))
 
 	// Determine port for HTTP service.
 	port := os.Getenv("PORT")
@@ -70,6 +73,12 @@ func check(err error, w http.ResponseWriter) bool {
 	return true
 }
 
+func fileHandler(path string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path)
+	}
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	name := os.Getenv("NAME")
 	if name == "" {
@@ -82,8 +91,10 @@ func townFestival(w http.ResponseWriter, r *http.Request) {
 	debug("Town Festival")
 	var context = struct {
 		IsMobile bool
+		GtmID    string
 	}{
 		IsMobile: false,
+		GtmID:    os.Getenv("MYCTIC_CASE_GTM_ID"),
 	}
 	var files = []string{
 		"./templates/base.html",
@@ -107,8 +118,10 @@ func hintsTownFestival(w http.ResponseWriter, r *http.Request) {
 	debug("Hints Town Festival")
 	var context = struct {
 		IsMobile bool
+		GtmID    string
 	}{
 		IsMobile: false,
+		GtmID:    os.Getenv("MYCTIC_CASE_GTM_ID"),
 	}
 
 	var files = []string{
@@ -162,14 +175,14 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
-		// 	payload.Overall, payload.ReasonToBuy, payload.Optional))
+		message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
+			payload.Overall, payload.ReasonToBuy, payload.Optional))
 
-		// err = sendEmail(message)
-		// if !check(err) {
-		// 	log.Printf("Failed to send email: %s", err.Error())
-		// 	return
-		// }
+		err = sendEmail(message)
+		if !check(err) {
+			log.Printf("Failed to send email: %s", err.Error())
+			return
+		}
 		log.Print("Email sent successfully")
 		resp := struct {
 			Success bool `json:"success"`
@@ -206,6 +219,6 @@ func sendEmail(message []byte) error {
 	//return smtp.SendMail(fmt.Sprintf("%s:%s", host, port), auth, from, []string{to}, message)
 }
 
-func fileHandler(path string) http.Handler {
+func folderHandler(path string) http.Handler {
 	return http.FileServer(http.Dir(path))
 }

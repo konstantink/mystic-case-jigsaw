@@ -3,7 +3,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <!-- Google Tag Manager -->
+            <script>
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','{{.GtmID}}');
+            </script>
+        <!-- End Google Tag Manager -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.25, maximum-scale=5.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
@@ -11,6 +19,10 @@
         <title>Mystic Case - Jigsaw - Town Festival</title>
     </head>
     <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{.GtmID}}"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
         <div id="main" class="{{if .IsMobile}}container-fluid{{else}}container-lg{{end}} p-4">
             <div class="row">
                 <div class="col">
@@ -32,77 +44,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <script type="application/javascript">
-            //async function onSubmit(e){e.preventDefault();let l=Array.from(document.querySelectorAll("[name=quest-value]")),t=Array.from(document.querySelectorAll("[name=overall-value]")),c=Array.from(document.querySelectorAll("[name=artwork-value]")),a=Array.from(document.querySelectorAll("[name=quality-value]")),r=document.querySelector("#reason-to-buy"),o=document.querySelector("#optional"),s=l.filter(e=>e.checked).length>0?parseInt(l.filter(e=>e.checked)[0].value):0,d=c.filter(e=>e.checked).length>0?parseInt(c.filter(e=>e.checked)[0].value):0,i=t.filter(e=>e.checked).length>0?parseInt(t.filter(e=>e.checked)[0].value):0,u=a.filter(e=>e.checked).length>0?parseInt(a.filter(e=>e.checked)[0].value):0,n=r.value,h=o.value;try{let f=await fetch("/feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({quest:s,artwork:d,overall:i,quality:u,reasonToBuy:n,optional:h})}),k=await f.json();if(k.success){let v=1,$=document.querySelector("#feedback-form"),y=document.querySelector("#feedback-thank-you");y.classList.remove("d-none"),y.classList.add("d-flex"),y.classList.add("show"),$.classList.add("hide"),setTimeout(()=>{let e=setInterval(()=>{--v<0&&(r.value="",o.value="",l.filter(e=>e.checked)[0].checked=!1,c.filter(e=>e.checked)[0].checked=!1,a.filter(e=>e.checked)[0].checked=!1,t.filter(e=>e.checked)[0].checked=!1,clearInterval(e),y.classList.add("d-none"),y.classList.remove("d-flex"),y.classList.remove("show"),$.classList.remove("hide"),$.classList.remove("d-none"))},2500)},50)}else console.log("Ooops")}catch(m){console.log(m)}}
-            async function onSubmit(e) {
-                e.preventDefault();
-                e.target.classList.add("was-validated");
-                if (e.target.checkValidity()) {
-                    const quest = Array.from(document.querySelectorAll("[name=quest-value]"));
-                    const overall = Array.from(document.querySelectorAll("[name=overall-value]"));
-                    const artwork = Array.from(document.querySelectorAll("[name=artwork-value]"));
-                    const quality = Array.from(document.querySelectorAll("[name=quality-value]"));
-                    const reasonToBuy = document.querySelector("#reason-to-buy");
-                    const optional = document.querySelector("#optional");
-
-                    const questValue = quest.filter(item => item.checked).length > 0 ? parseInt(quest.filter(item => item.checked)[0].value) : 0;
-                    const artworkValue = artwork.filter(item => item.checked).length > 0 ? parseInt(artwork.filter(item => item.checked)[0].value) : 0;
-                    const overallValue = overall.filter(item => item.checked).length > 0 ? parseInt(overall.filter(item => item.checked)[0].value) : 0;
-                    const qualityValue = quality.filter(item => item.checked).length > 0 ? parseInt(quality.filter(item => item.checked)[0].value) : 0;
-                    const reasonToBuyValue = reasonToBuy.value;
-                    const optionalValue = optional.value;
-
-                    
-                    try {
-                        const resp = await fetch("/feedback", {
-                            method: "POST",
-                            headers: {'Content-Type': "application/json"},
-                            body: JSON.stringify({
-                                quest: questValue,
-                                artwork: artworkValue,
-                                overall: overallValue,
-                                quality: qualityValue,
-                                reasonToBuy: reasonToBuyValue,
-                                optional: optionalValue
-                            })
-                        });
-                        const data = await resp.json();
-                        if (data.success) {
-                            const timeout = 1;
-                            let timeLeft = timeout;
-                            e.target.classList.remove("was-validated");
-                            const page1 = document.querySelector("#feedback-form");
-                            const page2 = document.querySelector("#feedback-thank-you");
-                            page2.classList.remove("d-none");
-                            page2.classList.add("d-flex");
-                            page2.classList.add("show");
-                            page1.classList.add("hide");
-                            setTimeout(() => {
-                                let interval = setInterval(() => {
-                                    timeLeft--;
-                                    if (timeLeft < 0) {
-                                        reasonToBuy.value = "";
-                                        optional.value = "";
-                                        quest.filter(item => item.checked)[0].checked = false;
-                                        artwork.filter(item => item.checked)[0].checked = false;
-                                        quality.filter(item => item.checked)[0].checked = false;
-                                        overall.filter(item => item.checked)[0].checked = false;
-                                        clearInterval(interval);
-                                        page2.classList.add("d-none");
-                                        page2.classList.remove("d-flex");
-                                        page2.classList.remove("show");
-                                        page1.classList.remove("hide");
-                                        page1.classList.remove("d-none");
-                                    }
-                                }, 2500);
-                            }, 50);
-                        } else {
-                            console.log("Ooops");
-                        }
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }
-            }
+            async function onSubmit(e){if(e.preventDefault(),e.target.classList.add("was-validated"),e.target.checkValidity()){let l=Array.from(document.querySelectorAll("[name=quest-value]")),t=Array.from(document.querySelectorAll("[name=overall-value]")),a=Array.from(document.querySelectorAll("[name=artwork-value]")),c=Array.from(document.querySelectorAll("[name=quality-value]")),r=document.querySelector("#reason-to-buy"),s=document.querySelector("#optional"),o=l.filter(e=>e.checked).length>0?parseInt(l.filter(e=>e.checked)[0].value):0,d=a.filter(e=>e.checked).length>0?parseInt(a.filter(e=>e.checked)[0].value):0,i=t.filter(e=>e.checked).length>0?parseInt(t.filter(e=>e.checked)[0].value):0,u=c.filter(e=>e.checked).length>0?parseInt(c.filter(e=>e.checked)[0].value):0,n=r.value,h=s.value;try{let f=await fetch("/feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({quest:o,artwork:d,overall:i,quality:u,reasonToBuy:n,optional:h})}),k=await f.json();if(k.success){let v=1;e.target.classList.remove("was-validated");let $=document.querySelector("#feedback-form"),y=document.querySelector("#feedback-thank-you");y.classList.remove("d-none"),y.classList.add("d-flex"),y.classList.add("mc-show"),$.classList.add("mc-hide"),setTimeout(()=>{let e=setInterval(()=>{--v<0&&(r.value="",s.value="",l.filter(e=>e.checked)[0].checked=!1,a.filter(e=>e.checked)[0].checked=!1,c.filter(e=>e.checked)[0].checked=!1,t.filter(e=>e.checked)[0].checked=!1,clearInterval(e),y.classList.add("d-none"),y.classList.remove("d-flex"),y.classList.remove("mc-show"),$.classList.remove("mc-hide"),$.classList.remove("d-none"))},2500)},50)}else console.log("Ooops")}catch(m){console.log(m)}}}
         </script>
 
     </body>

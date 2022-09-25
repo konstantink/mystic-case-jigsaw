@@ -173,22 +173,22 @@ body {
     height: 848px;
 }
 
-.show {
-    animation: fadeIn 1s;
+.mc-show {
+    animation: showIn 1s;
     opacity: 1;
 }
 
-.hide {
-    animation: fadeOut 0.5s;
+.mc-hide {
+    animation: hideOut 0.5s;
     opacity: 0;
 }
 
-@keyframes fadeIn {
+@keyframes showIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
 
-@keyframes fadeOut {
+@keyframes hideOut {
     0% { opacity: 1; }
     100% { opacity: 0; }
 }

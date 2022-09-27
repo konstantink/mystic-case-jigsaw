@@ -95,7 +95,7 @@ func townFestival(w http.ResponseWriter, r *http.Request) {
 		BoxImages []string
 	}{
 		IsMobile: false,
-		GtmID:    os.Getenv("MYCTIC_CASE_GTM_ID"),
+		GtmID:    os.Getenv("MYSTIC_CASE_GTM_ID"),
 		BoxImages: []string{"./images/haunted-castle.webp", "./images/ufo-crash.webp", "./images/time-machine.webp",
 			"./images/school-of-magic.webp", "./images/national-treasure.webp", "./images/unfinished-case-of-holmes.webp",
 			"./images/simulation-theory.webp", "./images/lost-island.webp", "./images/dragula.webp", "./images/planet.webp"},

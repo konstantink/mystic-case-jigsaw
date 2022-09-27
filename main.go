@@ -90,11 +90,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func townFestival(w http.ResponseWriter, r *http.Request) {
 	debug("Town Festival")
 	var context = struct {
-		IsMobile bool
-		GtmID    string
+		IsMobile  bool
+		GtmID     string
+		BoxImages []string
 	}{
 		IsMobile: false,
 		GtmID:    os.Getenv("MYCTIC_CASE_GTM_ID"),
+		BoxImages: []string{"./images/haunted-castle.webp", "./images/ufo-crash.webp", "./images/time-machine.webp",
+			"./images/school-of-magic.webp", "./images/national-treasure.webp", "./images/unfinished-case-of-holmes.webp",
+			"./images/simulation-theory.webp", "./images/lost-island.webp", "./images/dragula.webp", "./images/planet.webp"},
 	}
 	var files = []string{
 		"./templates/base.html",

@@ -78,15 +78,41 @@
                         <div class="card card-body text-center mc-card">
                             <p class="lead">Check our "escape room in a box" boxes - interactive games you can play on the table at home.</p>
 
-                            <p>Mystic Case box is perfect for family or friends evenings and parties. &#128526; &#129321;</p>
+                            <p class="lead">Mystic Case box is perfect for family or friends evenings and parties. &#128526; &#129321;</p>
 
-                            <ul class="list">
+                            <ul class="lead list">
                                 <li class="blue-point"> Your goal is to resolve the detective case using the clues and all the objects you have</li>
                                 <li class="yellow-point"> During the game you will need to discover hidden clues, solve the puzzles, interact with objects and gather new information</li>
                                 <li class="blue-point"> Following the plot step by step you will find the final answer and resolve the case</li>
                             </ul>
-                            <p>Each box contains exciting plot with logical and interactive tasks, various objects and tools, clues, cyphers, puzzles, codes, and detailed hints for every stage if you're stuck. Everything you need is already included into the box.</p>
+                            <p class="lead">Each box contains exciting plot with logical and interactive tasks, various objects and tools, clues, cyphers, puzzles, codes, and detailed hints for every stage if you're stuck. Everything you need is already included into the box.</p>
                             <p class="lead">We have various of cases to choose from &#128522;</p>
+
+                            <div id="boxes" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    
+                                    {{range $index, $path := .BoxImages}}
+                                        <button type="button" data-bs-target="#boxes" data-bs-slide-to="{{ $index }}" class="round-indicator {{if not $index}}active{{end}}" aria-current="true" aria-label="Box {{ $index }}"></button>
+                                    {{end}}
+                                </div>
+                                <div class="carousel-inner">
+                                    
+                                    {{range $index, $path := .BoxImages}}
+                                        <div class="carousel-item {{if not $index}}active{{end}}">
+                                            <img src="{{ $path }}" class="d-block w-100 rounded" alt="box-{{$index}}">
+                                        </div>
+                                    {{end}}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#boxes" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#boxes" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+
                             <p class="lead mb-4">A fun way to challenge your brain and spend quality time with your friends or family</p>
                             <button class="btn btn-primary" onclick="window.location.href = 'https://www.mystic-case.co.uk/shop-1/escape-boxes'">
                                 Shop now

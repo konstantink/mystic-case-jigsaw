@@ -52,13 +52,13 @@ body {
     justify-content: center;
 }
 
-/* .carousel-control-next {
+.carousel-control-next {
     right: -48px;
 }
 
 .carousel-control-prev {
     left: -48px;
-} */
+}
 
 .round-indicator {
     border-radius: 50%;
@@ -170,7 +170,12 @@ body {
 } */
 
 .carousel {
-    height: 848px;
+    height: 770px;
+}
+
+.carousel-inner {
+    width: 90%;
+    margin: 0 auto;
 }
 
 .mc-show {
@@ -214,12 +219,12 @@ body {
     text-align: start;
 }
 
-.blue-point::before {
+.blue-point:before {
     content: "🔷";
     padding-left: -16px;
 }
 
-.yellow-point::before {
+.yellow-point:before {
     content: "🔶";
 }
 

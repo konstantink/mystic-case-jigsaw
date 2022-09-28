@@ -52,14 +52,6 @@ body {
     justify-content: center;
 }
 
-.carousel-control-next {
-    right: -48px;
-}
-
-.carousel-control-prev {
-    left: -48px;
-}
-
 .round-indicator {
     border-radius: 50%;
     height: 8px!important;
@@ -169,14 +161,44 @@ body {
     width: 100vh;
 } */
 
-.carousel {
-    height: 770px;
+@media screen and (min-width: 992px) {
+    .carousel {
+        height: 770px;
+    }
+
+    .carousel-inner {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .carousel-control-next {
+        right: -48px;
+    }
+    
+    .carousel-control-prev {
+        left: -48px;
+    }
 }
 
-.carousel-inner {
-    width: 90%;
-    margin: 0 auto;
+@media screen and (max-width: 900px) {
+    .carousel {
+        height: 340px;
+    }
+
+    .carousel-inner {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .carousel-control-next {
+        right: -32px;
+    }
+    
+    .carousel-control-prev {
+        left: -32px;
+    }
 }
+
 
 .mc-show {
     animation: showIn 1s;

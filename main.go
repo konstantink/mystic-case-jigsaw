@@ -35,6 +35,8 @@ const emailTemplate = `
 Your jigsaw.mystic-case.co.uk</p>
 `
 
+var emailChan chan []byte
+
 func main() {
 	log.Print("starting server...")
 	http.HandleFunc("^/$", handler)
@@ -46,6 +48,10 @@ func main() {
 	http.HandleFunc("/feedback", feedback)
 	http.Handle("/static/", http.StripPrefix("/static/", folderHandler("./static")))
 	http.Handle("/images/", http.StripPrefix("/images/", folderHandler("./images")))
+
+	emailChan = make(chan []byte, 10)
+
+	go listenForEmail()
 
 	// Determine port for HTTP service.
 	port := os.Getenv("PORT")
@@ -182,7 +188,8 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 		message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
 			payload.Overall, payload.ReasonToBuy, payload.Optional))
 
-		err = sendEmail(message)
+		emailChan <- message
+		//err = sendEmail(message)
 		if !check(err) {
 			log.Printf("Failed to send email: %s", err.Error())
 			return
@@ -200,7 +207,7 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func sendEmail(message []byte) error {
+func listenForEmail() {
 	host := os.Getenv("MYSTIC_CASE_SMTP_HOST")
 	port := os.Getenv("MYSTIC_CASE_SMTP_PORT")
 	username := os.Getenv("MYSTIC_CASE_USERNAME")
@@ -208,19 +215,24 @@ func sendEmail(message []byte) error {
 	to := os.Getenv("MYSTIC_CASE_TO")
 	from := os.Getenv("MYSTIC_CASE_FROM")
 
-	e := email.Email{
-		From:    from,
-		To:      []string{to},
-		Subject: "User feedback on the jigsaw",
-		HTML:    message,
+	for message := range emailChan {
+		e := email.Email{
+			From:    from,
+			To:      []string{to},
+			Subject: "User feedback on the jigsaw",
+			HTML:    message,
+		}
+
+		log.Print("Authorising on SMTP server...")
+		auth := smtp.PlainAuth("", username, password, host)
+
+		log.Print("Sending email...")
+		err := e.Send(fmt.Sprintf("%s:%s", host, port), auth)
+		if err != nil {
+			log.Printf("Something went wrong: %s", err.Error())
+		}
+		// return smtp.SendMail(fmt.Sprintf("%s:%s", host, port), auth, from, []string{to}, message)
 	}
-
-	log.Print("Authorising on SMTP server...")
-	auth := smtp.PlainAuth("", username, password, host)
-
-	log.Print("Sending email...")
-	return e.Send(fmt.Sprintf("%s:%s", host, port), auth)
-	//return smtp.SendMail(fmt.Sprintf("%s:%s", host, port), auth, from, []string{to}, message)
 }
 
 func folderHandler(path string) http.Handler {

@@ -1,0 +1,27 @@
+{{define "buy_form"}}
+
+<div class="form-table-3 mb-4 text-center">
+    <p class="form-label lead">
+        How likely would you order another Jigsaw with Quest from Mystic Case?
+    </p>
+    <div class="form-check d-flex flex-column align-items-center ps-0">
+        <input class="form-check-input ms-0" type="radio" name="buy-value" value="no" id="buy-1" required>
+        <label class="form-check-label" for="buy-1">
+            Probably not
+        </label>
+    </div>
+    <div class="form-check d-flex flex-column align-items-center ps-0">
+        <input class="form-check-input ms-0" type="radio" name="buy-value" value="maybe" id="buy-2">
+        <label class="form-check-label" for="buy-2">
+            Maybe
+        </label>
+    </div>
+    <div class="form-check d-flex flex-column align-items-center ps-0">
+        <input class="form-check-input ms-0" type="radio" name="buy-value" value="yes" id="buy-3">
+        <label class="form-check-label" for="buy-3">
+            I'm interested
+        </label>
+    </div>
+</div>
+
+{{end}}

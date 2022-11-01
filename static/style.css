@@ -136,10 +136,14 @@ body {
     color: #ff1100;
 }
 
-.form-table {
+.form-table, .form-table-3 {
     display: grid;
     column-gap: 8px;
     grid-template-columns: repeat(5, minmax(60px, 160px));
+}
+
+.form-table-3 {
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .form-label {

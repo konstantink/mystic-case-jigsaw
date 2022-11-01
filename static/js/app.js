@@ -6,6 +6,7 @@ async function onSubmit(e) {
         const overall = Array.from(document.querySelectorAll("[name=overall-value]"));
         const artwork = Array.from(document.querySelectorAll("[name=artwork-value]"));
         const quality = Array.from(document.querySelectorAll("[name=quality-value]"));
+        const buyNext = Array.from(document.querySelectorAll("[name=buy-value]"));
         const reasonToBuy = document.querySelector("#reason-to-buy");
         const optional = document.querySelector("#optional");
 
@@ -13,6 +14,7 @@ async function onSubmit(e) {
         const artworkValue = artwork.filter(item => item.checked).length > 0 ? parseInt(artwork.filter(item => item.checked)[0].value) : 0;
         const overallValue = overall.filter(item => item.checked).length > 0 ? parseInt(overall.filter(item => item.checked)[0].value) : 0;
         const qualityValue = quality.filter(item => item.checked).length > 0 ? parseInt(quality.filter(item => item.checked)[0].value) : 0;
+        const buyNextValue = buyNext.filter(item => item.checked).length > 0 ? buyNext.filter(item => item.checked)[0].value : "-";
         const reasonToBuyValue = reasonToBuy.value;
         const optionalValue = optional.value;
 
@@ -26,6 +28,7 @@ async function onSubmit(e) {
                     artwork: artworkValue,
                     overall: overallValue,
                     quality: qualityValue,
+                    buyNext: buyNextValue,
                     reasonToBuy: reasonToBuyValue,
                     optional: optionalValue
                 })
@@ -51,6 +54,7 @@ async function onSubmit(e) {
                             artwork.filter(item => item.checked)[0].checked = false;
                             quality.filter(item => item.checked)[0].checked = false;
                             overall.filter(item => item.checked)[0].checked = false;
+                            buyNext.filter(item => item.checked)[0].checked = false;
                             clearInterval(interval);
                             page2.classList.add("d-none");
                             page2.classList.remove("d-flex");

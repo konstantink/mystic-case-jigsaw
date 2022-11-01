@@ -19,10 +19,11 @@ const emailTemplate = `
 
 <p>Somebody has left a feedback for the jigsaw. Here are the answers:
 <ul>
-        <li>Quest: %d</li>
         <li>Quality: %d</li>
         <li>Artwork: %d</li>
+        <li>Quest: %d</li>
         <li>Overall: %d</li>
+        <li>Buy next box: %s</li>
         <li>The reason to buy: %q</li>
         <li>Anything to add: %q</li>
 </ul></p>
@@ -112,6 +113,7 @@ func townFestival(w http.ResponseWriter, r *http.Request) {
 		"./templates/views/quality_form.html",
 		"./templates/views/artwork_form.html",
 		"./templates/views/quest_form.html",
+		"./templates/views/buy_form.html",
 		"./templates/views/overall_form.html",
 		"./templates/views/footer.html",
 	}
@@ -173,6 +175,7 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 			Quality     int8
 			Artwork     int8
 			Overall     int8
+			BuyNext     string
 			ReasonToBuy string
 			Optional    string
 		}
@@ -185,8 +188,8 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		message := []byte(fmt.Sprintf(emailTemplate, payload.Quest, payload.Quality, payload.Artwork,
-			payload.Overall, payload.ReasonToBuy, payload.Optional))
+		message := []byte(fmt.Sprintf(emailTemplate, payload.Quality, payload.Artwork, payload.Quality,
+			payload.Overall, payload.BuyNext, payload.ReasonToBuy, payload.Optional))
 
 		emailChan <- message
 		//err = sendEmail(message)

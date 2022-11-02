@@ -188,7 +188,7 @@ func feedback(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		message := []byte(fmt.Sprintf(emailTemplate, payload.Quality, payload.Artwork, payload.Quality,
+		message := []byte(fmt.Sprintf(emailTemplate, payload.Quality, payload.Artwork, payload.Quest,
 			payload.Overall, payload.BuyNext, payload.ReasonToBuy, payload.Optional))
 
 		emailChan <- message
